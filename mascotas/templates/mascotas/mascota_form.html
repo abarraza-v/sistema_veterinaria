@@ -113,7 +113,7 @@
                                 {{ form.edad.label }}
                             </label>
                             {{ form.edad }}
-                            <div class="form-text">Edad aproximada en años</div>
+                            <div class="form-text" id="edad-help">Se calcula automáticamente desde la fecha de nacimiento</div>
                             {% if form.edad.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.edad.errors.0 }}
@@ -127,6 +127,7 @@
                                 {{ form.fecha_nacimiento.label }}
                             </label>
                             {{ form.fecha_nacimiento }}
+                            <div class="form-text">La edad se calculará automáticamente</div>
                             {% if form.fecha_nacimiento.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.fecha_nacimiento.errors.0 }}
@@ -163,4 +164,81 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const especieSelect = document.getElementById('id_especie');
+    const especieOtroWrapper = document.getElementById('especie_otro_wrapper');
+    const especieOtroInput = document.getElementById('id_especie_otro');
+    const fechaNacimientoInput = document.getElementById('id_fecha_nacimiento');
+    const edadInput = document.getElementById('id_edad');
+
+    // Función para mostrar/ocultar campo "Especificar otra especie"
+    function toggleEspecieOtro() {
+        if (especieSelect.value === 'Otro') {
+            especieOtroWrapper.style.display = 'block';
+            especieOtroInput.required = true;
+        } else {
+            especieOtroWrapper.style.display = 'none';
+            especieOtroInput.required = false;
+            especieOtroInput.value = '';
+        }
+    }
+
+    // Función para calcular edad en tiempo real
+    function calcularEdad() {
+        const fechaNacimiento = fechaNacimientoInput.value;
+        if (fechaNacimiento) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            
+            let años = hoy.getFullYear() - nacimiento.getFullYear();
+            let meses = hoy.getMonth() - nacimiento.getMonth();
+            
+            if (meses < 0 || (meses === 0 && hoy.getDate() < nacimiento.getDate())) {
+                años--;
+                meses += 12;
+            }
+            
+            if (hoy.getDate() < nacimiento.getDate() && meses > 0) {
+                meses--;
+            }
+            
+            const edadDecimal = años + (meses / 12.0);
+            
+            // Si es entero, mostrar sin decimales
+            if (edadDecimal === Math.floor(edadDecimal)) {
+                edadInput.value = Math.floor(edadDecimal);
+            } else {
+                edadInput.value = edadDecimal.toFixed(1);
+            }
+            
+            // Bloquear campo edad
+            edadInput.readOnly = true;
+        } else {
+            // Desbloquear campo edad si no hay fecha
+            edadInput.readOnly = false;
+            edadInput.value = '';
+        }
+    }
+
+    // Establecer fecha máxima como hoy
+    const hoy = new Date().toISOString().split('T')[0];
+    fechaNacimientoInput.max = hoy;
+
+    // Event listeners
+    if (especieSelect) {
+        toggleEspecieOtro();
+        especieSelect.addEventListener('change', toggleEspecieOtro);
+    }
+
+    if (fechaNacimientoInput) {
+        // Calcular edad al cargar si ya hay fecha
+        if (fechaNacimientoInput.value) {
+            calcularEdad();
+        }
+        fechaNacimientoInput.addEventListener('change', calcularEdad);
+    }
+});
+</script>
 {% endblock %}
