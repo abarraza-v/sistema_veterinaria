@@ -3,15 +3,103 @@ Comando para poblar la base de datos con datos de prueba
 """
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User, Group
+from django.db import connection
 from clientes.models import Cliente
 from mascotas.models import Mascota
+from autenticacion.models import LoginAttempt, UserProfile
 from datetime import date
+import os
 
 
 class Command(BaseCommand):
     help = 'Poblar la base de datos con datos de prueba'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--reset',
+            action='store_true',
+            help='Elimina la base de datos y todas las migraciones, luego la recrea desde cero',
+        )
+
     def handle(self, *args, **kwargs):
+        reset = kwargs.get('reset', False)
+        
+        if reset:
+            self.stdout.write(self.style.WARNING('\n⚠️  ADVERTENCIA: Esto eliminará TODOS los datos y migraciones'))
+            confirm = input('¿Estás seguro? Escribe "SI" para confirmar: ')
+            
+            if confirm != 'SI':
+                self.stdout.write(self.style.ERROR('Operación cancelada'))
+                return
+            
+            self.reset_database()
+        
+        self.seed_data()
+
+    def reset_database(self):
+        """Elimina la base de datos y las migraciones, y las recrea"""
+        from django.conf import settings
+        from django.db import connections
+        import shutil
+        import time
+        
+        self.stdout.write(self.style.WARNING('\n🗑️  Eliminando base de datos...'))
+        
+        # Cerrar todas las conexiones activas
+        for conn in connections.all():
+            conn.close()
+        
+        # Eliminar archivo de base de datos SQLite
+        db_path = settings.DATABASES['default']['NAME']
+        if os.path.exists(db_path):
+            # Intentar varias veces con pequeñas pausas
+            max_attempts = 5
+            for attempt in range(max_attempts):
+                try:
+                    os.remove(db_path)
+                    self.stdout.write(self.style.SUCCESS(f'  ✓ Base de datos eliminada: {db_path}'))
+                    break
+                except PermissionError:
+                    if attempt < max_attempts - 1:
+                        self.stdout.write(self.style.WARNING(f'  ⏳ Esperando... (intento {attempt + 1}/{max_attempts})'))
+                        time.sleep(1)
+                    else:
+                        self.stdout.write(self.style.ERROR(
+                            '\n❌ Error: No se pudo eliminar la base de datos.\n'
+                            '   Cierra todas las conexiones (VS Code, navegador, etc.) y ejecuta:\n'
+                            '   py manage.py seed --reset\n'
+                        ))
+                        return
+        
+        # Eliminar carpetas de migraciones
+        self.stdout.write(self.style.WARNING('\n🗑️  Eliminando archivos de migraciones...'))
+        apps = ['autenticacion', 'clientes', 'mascotas', 'core']
+        
+        for app in apps:
+            migrations_path = os.path.join(app, 'migrations')
+            if os.path.exists(migrations_path):
+                # Eliminar todos los archivos excepto __init__.py
+                for file in os.listdir(migrations_path):
+                    if file != '__init__.py' and file != '__pycache__':
+                        file_path = os.path.join(migrations_path, file)
+                        if os.path.isfile(file_path):
+                            os.remove(file_path)
+                        elif os.path.isdir(file_path):
+                            shutil.rmtree(file_path)
+                self.stdout.write(self.style.SUCCESS(f'  ✓ Migraciones eliminadas: {app}'))
+        
+        # Ejecutar makemigrations y migrate
+        self.stdout.write(self.style.WARNING('\n📝 Creando nuevas migraciones...'))
+        from django.core.management import call_command
+        call_command('makemigrations')
+        
+        self.stdout.write(self.style.WARNING('\n🔄 Aplicando migraciones...'))
+        call_command('migrate')
+        
+        self.stdout.write(self.style.SUCCESS('\n✓ Base de datos recreada exitosamente\n'))
+
+    def seed_data(self):
+        """Pobla la base de datos con datos de prueba"""
         self.stdout.write(self.style.SUCCESS('Iniciando seed de datos...'))
         
         # Crear grupos
@@ -209,4 +297,4 @@ class Command(BaseCommand):
         self.stdout.write('  - Veterinario: veterinario@vetclinic.cl / vet123')
         self.stdout.write('  - Veterinario: ana.lopez@vetclinic.cl / vet123')
         self.stdout.write('  - Veterinario: pedro.silva@vetclinic.cl / vet123')
-        self.stdout.write('  - Inactivo: pedro@vetclinic.cl (Inactivo)')
+        self.stdout.write('  - Inactivo: pedro@vetclinic.cl (Inactivo)\n')
