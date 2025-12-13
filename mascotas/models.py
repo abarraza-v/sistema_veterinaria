@@ -32,7 +32,7 @@ class Mascota(models.Model):
     especie_otro = models.CharField(max_length=50, blank=True, null=True)
     raza = models.CharField(max_length=100)
     sexo = models.CharField(max_length=10, choices=SEXO_CHOICES)
-    edad = models.IntegerField(blank=True, null=True)
+    edad = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
     alergias = models.TextField(blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
