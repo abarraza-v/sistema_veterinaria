@@ -1,0 +1,112 @@
+/* Estilos del sidebar */
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background-color: #F9FAFB;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.sidebar-header h4 {
+    color: #2563EB;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.sidebar-header .sidebar-time {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.sidebar-user {
+    padding: 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 3rem;
+    height: 3rem;
+    background-color: #DBEAFE;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563EB;
+    font-size: 2rem;
+}
+
+.user-info p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1.5rem;
+    color: #4B5563;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.sidebar-link i {
+    font-size: 1.25rem;
+    width: 1.5rem;
+}
+
+.sidebar-link:hover {
+    background-color: #E5E7EB;
+    color: #2563EB;
+}
+
+.sidebar-link.active {
+    background-color: #DBEAFE;
+    color: #2563EB;
+    border-right: 3px solid #2563EB;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+.sidebar-footer .btn {
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        transition: left 0.3s;
+        z-index: 1000;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+    }
+}

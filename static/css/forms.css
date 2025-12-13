@@ -1,0 +1,76 @@
+/* Estilos para formularios */
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.form-section h3 {
+    color: #1F2937;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6B7280;
+}
+
+.form-control,
+.form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #D1D5DB;
+    padding: 0.625rem 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-check-input:checked {
+    background-color: #2563EB;
+    border-color: #2563EB;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #EF4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+/* Estilos para el campo de especie_otro */
+#especie_otro_wrapper {
+    display: none;
+}
+
+#especie_otro_wrapper.show {
+    display: block;
+}

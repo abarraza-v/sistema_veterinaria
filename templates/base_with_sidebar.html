@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4 class="mb-0">Veterinaria "Patitas Felices"</h4>
+            <p class="text-muted mb-0 sidebar-time" id="current-time">10:15 a. m.</p>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">5 de diciembre de 2025</p>
+        </div>
+
+        <div class="sidebar-user">
+            <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div class="user-info">
+                <p class="mb-0 fw-bold">{{ request.user.get_full_name|default:request.user.username }}</p>
+                <p class="mb-0 text-muted">
+                    {% if request.user.groups.all %}
+                        {{ request.user.groups.first.name }}
+                    {% else %}
+                        Usuario
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-calendar3"></i>
+                <span>Agenda</span>
+            </a>
+            <a href="{% url 'clientes:listar' %}" class="sidebar-link {% if request.resolver_match.app_name == 'clientes' or request.resolver_match.app_name == 'mascotas' %}active{% endif %}">
+                <i class="bi bi-people"></i>
+                <span>Clientes y Mascotas</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-file-medical"></i>
+                <span>Iniciar Consulta</span>
+            </a>
+            {% if request.user.groups.filter.name='Administrador' %}
+            <a href="{% url 'usuarios:listar' %}" class="sidebar-link {% if request.resolver_match.app_name == 'usuarios' %}active{% endif %}">
+                <i class="bi bi-person-gear"></i>
+                <span>Gestión de Usuarios</span>
+            </a>
+            {% endif %}
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="{% url 'autenticacion:logout' %}" class="btn btn-outline-danger w-100">
+                <i class="bi bi-box-arrow-right"></i>
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+        {% if messages %}
+            <div class="container-fluid mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block main_content %}{% endblock %}
+    </div>
+</div>
+
+<script>
+    // Actualizar la hora cada minuto
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
+        const displayHours = hours % 12 || 12;
+        const displayMinutes = minutes < 10 ? '0' + minutes : minutes;
+        
+        document.getElementById('current-time').textContent = `${displayHours}:${displayMinutes} ${ampm}`;
+    }
+    
+    updateTime();
+    setInterval(updateTime, 60000); // Actualizar cada minuto
+</script>
+{% endblock %}

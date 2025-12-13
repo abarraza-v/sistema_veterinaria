@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .login-container {
+        max-width: 480px;
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .login-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        padding: 3rem 2.5rem;
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .login-header h2 {
+        color: #2563EB;
+        font-weight: 700;
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-header p {
+        color: #6B7280;
+        font-size: 0.95rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        border-radius: 0.5rem;
+        border: 1px solid #D1D5DB;
+        padding: 0.75rem 1rem;
+        padding-right: 3rem;
+    }
+    
+    .form-control:focus {
+        border-color: #2563EB;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .input-group {
+        position: relative;
+    }
+    
+    .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9CA3AF;
+        cursor: pointer;
+        z-index: 10;
+    }
+    
+    .btn-login {
+        width: 100%;
+        padding: 0.875rem;
+        background-color: #2563EB;
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .btn-login:hover {
+        background-color: #1D4ED8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .forgot-password {
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .forgot-password a {
+        color: #2563EB;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+    
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+    
+    .autocomplete-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #E5E7EB;
+    }
+    
+    .autocomplete-section p {
+        font-size: 0.875rem;
+        color: #6B7280;
+        margin-bottom: 1rem;
+    }
+    
+    .user-quick-login {
+        background: #F9FAFB;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid #E5E7EB;
+    }
+    
+    .user-quick-login:hover {
+        background: #F3F4F6;
+        border-color: #2563EB;
+    }
+    
+    .user-quick-login strong {
+        display: block;
+        color: #1F2937;
+        margin-bottom: 0.25rem;
+    }
+    
+    .user-quick-login span {
+        font-size: 0.85rem;
+        color: #6B7280;
+    }
+    
+    .alert {
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Veterinaria Patitas Felices</h2>
+            <p>Sistema de Gestión</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" id="login-form">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Usuario / Email</label>
+                <div class="input-group">
+                    {{ form.username }}
+                    <i class="bi bi-person-circle input-icon"></i>
+                </div>
+                {% if form.username.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.username.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña</label>
+                <div class="input-group">
+                    {{ form.password }}
+                    <i class="bi bi-eye input-icon" id="toggle-password"></i>
+                </div>
+                {% if form.password.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.password.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors.0 }}
+                </div>
+            {% endif %}
+
+            <div class="mb-3 form-check">
+                {{ form.remember_me }}
+                <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">
+                    Recordar sesión
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                Iniciar Sesión
+            </button>
+
+            <div class="forgot-password">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+        </form>
+
+        <div class="autocomplete-section">
+            <p>Click para autocompletar:</p>
+            
+            <div class="user-quick-login" onclick="fillLogin('recepcion@vetclinic.cl', 'recepcion123')">
+                <strong>Recepcionista</strong>
+                <span>recepcion@vetclinic.cl / recepcion123</span>
+            </div>
+            
+            <div class="user-quick-login" onclick="fillLogin('veterinario@vetclinic.cl', 'vet123')">
+                <strong>Veterinario</strong>
+                <span>veterinario@vetclinic.cl / vet123</span>
+            </div>
+            
+            <div class="user-quick-login" onclick="fillLogin('admin@vetclinic.cl', 'admin123')">
+                <strong>Administrador</strong>
+                <span>admin@vetclinic.cl / admin123</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle password visibility
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
+        const icon = this;
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    });
+    
+    // Fill login form
+    function fillLogin(email, password) {
+        document.getElementById('{{ form.username.id_for_label }}').value = email;
+        document.getElementById('{{ form.password.id_for_label }}').value = password;
+    }
+</script>
+{% endblock %}
