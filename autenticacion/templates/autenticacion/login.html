@@ -4,7 +4,7 @@
 {% block extra_css %}
 <style>
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #e0edfe;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -214,7 +214,7 @@
             </button>
 
             <div class="forgot-password">
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="{% url 'autenticacion:password_reset' %}">¿Olvidaste tu contraseña?</a>
             </div>
         </form>
 
