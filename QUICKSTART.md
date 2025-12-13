@@ -1,6 +1,6 @@
 # Guía de Inicio Rápido - Veterinaria "Patitas Felices"
 
-## ⚡ Instalación Express
+## Instalación Express
 
 ### 1. Activar el entorno virtual
 ```bash
@@ -34,7 +34,7 @@ python manage.py runserver
 ### 6. Acceder al sistema
 Abrir navegador en: **http://localhost:8000**
 
-## 🔑 Credenciales de Acceso
+## Credenciales de Acceso
 
 | Usuario | Email | Contraseña | Permisos |
 |---------|-------|------------|----------|
@@ -42,7 +42,7 @@ Abrir navegador en: **http://localhost:8000**
 | Recepcionista | recepcion@vetclinic.cl | recepcion123 | Ver/Crear/Editar |
 | Veterinario | veterinario@vetclinic.cl | vet123 | Ver/Crear/Editar |
 
-## 📱 Navegación Rápida
+## Navegación Rápida
 
 ### Login
 - URL: `/` o `/login/`
@@ -60,7 +60,7 @@ Abrir navegador en: **http://localhost:8000**
 - Activar/Desactivar usuarios
 - Restablecer contraseñas
 
-## 🎯 Funcionalidades Destacadas
+## Funcionalidades Destacadas
 
 ### ✅ Validaciones Automáticas
 - **RUT chileno**: Formato 12.345.678-9 con validación Módulo 11
@@ -95,7 +95,7 @@ python manage.py createsuperuser
 http://localhost:8000/admin
 ```
 
-## 📊 Datos de Ejemplo Incluidos
+## Datos de Ejemplo Incluidos
 
 Después de ejecutar `python manage.py seed`:
 
@@ -128,7 +128,7 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-## 📝 Estructura de Archivos Importante
+## Estructura de Archivos Importante
 
 ```
 sistema_veterinaria/
@@ -140,21 +140,14 @@ sistema_veterinaria/
 └── QUICKSTART.md          # Esta guía
 ```
 
-## 💡 Tips de Uso
+## Tips de Uso
 
 1. **Siempre activar el entorno virtual** antes de trabajar
 2. **Usar usuarios de prueba** para probar las funcionalidades
 3. **El administrador** tiene acceso a todo, incluyendo eliminación
 4. **Recepcionistas y Veterinarios** pueden ver, crear y editar, pero no eliminar
 5. **Los RUT y teléfonos** se formatean automáticamente al salir del campo
-
-## 🚀 Próximos Pasos
-
-1. Explora el sistema con los usuarios de prueba
-2. Crea nuevos clientes y mascotas
-3. Prueba el sistema de búsqueda
-4. Si eres Admin, gestiona usuarios
-5. Revisa el README.md para más detalles
+ Revisa el README.md para más detalles
 
 ---
 
