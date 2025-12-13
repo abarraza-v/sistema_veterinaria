@@ -98,14 +98,19 @@ def eliminar(request, pk):
     
     cliente = get_object_or_404(Cliente, pk=pk)
     
+    # Contar mascotas asociadas
+    num_mascotas = cliente.mascotas.filter(is_deleted=False).count()
+    
     if request.method == 'POST':
+        # Verificar que no tenga mascotas activas
+        if num_mascotas > 0:
+            messages.error(request, f'No se puede eliminar el cliente "{cliente.nombre}" porque tiene {num_mascotas} mascota(s) asociada(s). Elimine primero las mascotas.')
+            return redirect('clientes:listar')
+        
         # Realizar soft delete
         cliente.soft_delete()
         messages.success(request, f'Cliente "{cliente.nombre}" eliminado exitosamente.')
         return redirect('clientes:listar')
-    
-    # Contar mascotas asociadas
-    num_mascotas = cliente.mascotas.filter(is_deleted=False).count()
     
     return render(request, 'clientes/cliente_confirm_delete.html', {
         'cliente': cliente,
