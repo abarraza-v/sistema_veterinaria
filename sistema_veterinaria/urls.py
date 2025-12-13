@@ -23,5 +23,6 @@ urlpatterns = [
     path('clientes/', include('clientes.urls')),
     path('mascotas/', include('mascotas.urls')),
     path('usuarios/', include('usuarios.urls')),
+    path('', include('autenticacion.urls')),
 ]
 
