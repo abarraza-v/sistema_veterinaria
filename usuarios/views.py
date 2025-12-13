@@ -18,7 +18,15 @@ def is_admin(user):
 @user_passes_test(is_admin, login_url='clientes:listar')
 def listar(request):
     """Lista todos los usuarios del sistema (solo administradores)"""
-    usuarios = User.objects.filter(is_superuser=False).prefetch_related('groups').order_by('-date_joined')
+    # Obtener el primer usuario (admin principal)
+    first_user = User.objects.order_by('id').first()
+    
+    # Excluir el usuario actual y el admin principal de la lista
+    usuarios = User.objects.filter(
+        is_superuser=False
+    ).exclude(
+        id__in=[request.user.id, first_user.id if first_user else None]
+    ).prefetch_related('groups').order_by('-date_joined')
     
     return render(request, 'usuarios/usuario_list.html', {
         'usuarios': usuarios
@@ -62,6 +70,18 @@ def editar(request, pk):
     """Editar un usuario existente (solo administradores)"""
     usuario = get_object_or_404(User, pk=pk, is_superuser=False)
     
+    # Obtener el primer usuario (admin principal)
+    first_user = User.objects.order_by('id').first()
+    
+    # No permitir editar el usuario actual ni el admin principal
+    if usuario.id == request.user.id:
+        messages.error(request, 'No puedes editar tu propio usuario.')
+        return redirect('usuarios:listar')
+    
+    if first_user and usuario.id == first_user.id:
+        messages.error(request, 'No puedes editar el administrador principal del sistema.')
+        return redirect('usuarios:listar')
+    
     if request.method == 'POST':
         form = UsuarioForm(request.POST, instance=usuario)
         if form.is_valid():
@@ -85,9 +105,16 @@ def toggle_active(request, pk):
     """Activar/Desactivar un usuario (solo administradores)"""
     usuario = get_object_or_404(User, pk=pk, is_superuser=False)
     
-    # No permitir desactivar el propio usuario
+    # Obtener el primer usuario (admin principal)
+    first_user = User.objects.order_by('id').first()
+    
+    # No permitir desactivar el propio usuario ni el admin principal
     if usuario == request.user:
         messages.error(request, 'No puedes desactivar tu propia cuenta.')
+        return redirect('usuarios:listar')
+    
+    if first_user and usuario.id == first_user.id:
+        messages.error(request, 'No puedes desactivar el administrador principal del sistema.')
         return redirect('usuarios:listar')
     
     if request.method == 'POST':
@@ -108,6 +135,18 @@ def toggle_active(request, pk):
 def reset_password(request, pk):
     """Restablecer contraseña de un usuario (solo administradores)"""
     usuario = get_object_or_404(User, pk=pk, is_superuser=False)
+    
+    # Obtener el primer usuario (admin principal)
+    first_user = User.objects.order_by('id').first()
+    
+    # No permitir resetear contraseña del usuario actual ni del admin principal
+    if usuario.id == request.user.id:
+        messages.error(request, 'No puedes restablecer tu propia contraseña desde aquí.')
+        return redirect('usuarios:listar')
+    
+    if first_user and usuario.id == first_user.id:
+        messages.error(request, 'No puedes restablecer la contraseña del administrador principal.')
+        return redirect('usuarios:listar')
     
     if request.method == 'POST':
         # Generar nueva contraseña
