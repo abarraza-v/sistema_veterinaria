@@ -1,0 +1,101 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}Gestión de Usuarios - Veterinaria Patitas Felices{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">Gestión de Usuarios</h2>
+            <p class="text-muted">Administre las cuentas de usuario del sistema</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'usuarios:crear' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>
+                Nuevo Usuario
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                            <tr>
+                                <td>
+                                    <strong>{{ usuario.get_full_name }}</strong>
+                                </td>
+                                <td>{{ usuario.email }}</td>
+                                <td>
+                                    {% if usuario.groups.all %}
+                                        {% with grupo=usuario.groups.first.name %}
+                                            {% if grupo == 'Recepcionista' %}
+                                                <span class="badge badge-recepcionista">Recepcionista</span>
+                                            {% elif grupo == 'Veterinario' %}
+                                                <span class="badge badge-veterinario">Veterinario</span>
+                                            {% elif grupo == 'Administrador' %}
+                                                <span class="badge badge-administrador">Administrador</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ grupo }}</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">Sin rol</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if usuario.is_active %}
+                                        <span class="badge badge-activo">Activo</span>
+                                    {% else %}
+                                        <span class="badge badge-inactivo">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'usuarios:editar' usuario.pk %}" 
+                                           class="action-icon action-icon-edit" 
+                                           title="Editar">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        
+                                        <a href="{% url 'usuarios:toggle_active' usuario.pk %}" 
+                                           class="action-icon {% if usuario.is_active %}action-icon-danger{% else %}action-icon-success{% endif %}" 
+                                           title="{% if usuario.is_active %}Desactivar{% else %}Activar{% endif %}">
+                                            <i class="bi bi-power"></i>
+                                        </a>
+                                        
+                                        <a href="{% url 'usuarios:reset_password' usuario.pk %}" 
+                                           class="action-icon action-icon-edit" 
+                                           title="Restablecer contraseña">
+                                            <i class="bi bi-key"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                    No hay usuarios registrados
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
