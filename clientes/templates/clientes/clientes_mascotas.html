@@ -8,17 +8,30 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="container-fluid">
-    <div class="row mb-4">
+<div class="container-fluid p-4">
+    <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="fw-bold">Clientes y Mascotas</h2>
-            <p class="text-muted">Gestione la información de clientes y sus mascotas</p>
+            <h2 class="fw-bold mb-1">Clientes y Mascotas</h2>
+            <p class="text-muted mb-0">Gestione la información de clientes y sus mascotas</p>
+        </div>
+        <div class="col-auto">
+            {% if tab == 'clientes' %}
+                <a href="{% url 'clientes:crear' %}" class="btn btn-primary btn-floating">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Agregar Cliente
+                </a>
+            {% else %}
+                <a href="{% url 'mascotas:crear' %}" class="btn btn-primary btn-floating">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Agregar Mascota
+                </a>
+            {% endif %}
         </div>
     </div>
 
     <!-- Switch de pestañas -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-12">
             <div class="tab-switch">
                 <button class="{% if tab == 'clientes' %}active{% endif %}" onclick="window.location.href='{% url 'clientes:listar' %}?tab=clientes{% if query %}&q={{ query }}{% endif %}'">
                     <i class="bi bi-people me-2"></i>
@@ -30,24 +43,11 @@
                 </button>
             </div>
         </div>
-        <div class="col-md-6 text-end">
-            {% if tab == 'clientes' %}
-                <a href="{% url 'clientes:crear' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Registrar Cliente
-                </a>
-            {% else %}
-                <a href="{% url 'mascotas:crear' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Registrar Mascota
-                </a>
-            {% endif %}
-        </div>
     </div>
 
     <!-- Barra de búsqueda -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-12">
             <form method="get" class="search-box">
                 <input type="hidden" name="tab" value="{{ tab }}">
                 <i class="bi bi-search"></i>
@@ -70,9 +70,20 @@
                                     <h5 class="card-title mb-1">{{ cliente.nombre }}</h5>
                                     <p class="text-muted mb-0"><small>RUT: {{ cliente.rut }}</small></p>
                                 </div>
-                                <a href="{% url 'clientes:editar' cliente.pk %}" class="action-icon action-icon-edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'clientes:editar' cliente.pk %}" class="action-icon action-icon-edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    {% if request.user.groups.exists %}
+                                        {% for group in request.user.groups.all %}
+                                            {% if group.name == 'Administrador' %}
+                                                <button type="button" class="action-icon action-icon-delete" data-bs-toggle="modal" data-bs-target="#deleteClienteModal{{ cliente.pk }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
                             </div>
                             
                             <div class="mb-3">
@@ -109,6 +120,40 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Modal de confirmación de eliminación -->
+                {% if request.user.groups.exists %}
+                    {% for group in request.user.groups.all %}
+                        {% if group.name == 'Administrador' %}
+                            <div class="modal fade" id="deleteClienteModal{{ cliente.pk }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirmar Eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar a <strong>{{ cliente.nombre }}</strong>?
+                                            {% if cliente.mascotas.all %}
+                                                <div class="alert alert-warning mt-3">
+                                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                                    Este cliente tiene {{ cliente.num_mascotas }} mascota(s) asociada(s).
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="post" action="{% url 'clientes:eliminar' cliente.pk %}" style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             {% empty %}
                 <div class="col-12">
                     <div class="alert alert-info">
@@ -125,43 +170,71 @@
     {% else %}
         <!-- Vista de Mascotas -->
         <div class="row">
-            {% for mascota in mascotas %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h5 class="card-title mb-1">{{ mascota.nombre }}</h5>
-                                    <p class="text-muted mb-0"><small>ID: #{{ mascota.pk }}</small></p>
-                                </div>
-                                <a href="{% url 'mascotas:editar' mascota.pk %}" class="action-icon action-icon-edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+            <div class="col-12">
+                {% for mascota in mascotas %}
+                    <div class="mascota-card-row mb-3">
+                        <div class="mascota-icon">
+                            <i class="bi bi-heart-fill"></i>
+                        </div>
+                        <h5 class="mascota-name">{{ mascota.nombre }}</h5>
+                        <div class="mascota-info-row">
+                            <div class="mascota-field">
+                                <span class="mascota-field-label">Especie</span>
+                                <span class="mascota-field-value">{{ mascota.get_especie_display_custom }}</span>
                             </div>
-                            
-                            <div class="mb-3">
-                                <p class="mb-1">
-                                    <strong>Especie:</strong> {{ mascota.get_especie_display_custom }}
-                                </p>
-                                <p class="mb-1">
-                                    <strong>Raza:</strong> {{ mascota.raza }}
-                                </p>
-                                <p class="mb-0">
-                                    <strong>Sexo:</strong> {{ mascota.get_sexo_display }}
-                                </p>
+                            <div class="mascota-field">
+                                <span class="mascota-field-label">Raza</span>
+                                <span class="mascota-field-value">{{ mascota.raza }}</span>
                             </div>
-
-                            <div class="border-top pt-3">
-                                <p class="text-muted mb-0">
-                                    <i class="bi bi-person me-2 text-primary"></i>
-                                    <strong>Dueño:</strong> {{ mascota.dueno.nombre }}
-                                </p>
+                            <div class="mascota-field">
+                                <span class="mascota-field-label">Dueño</span>
+                                <span class="mascota-field-value">{{ mascota.dueno.nombre }}</span>
                             </div>
                         </div>
+                        <div class="mascota-actions">
+                            <a href="{% url 'mascotas:editar' mascota.pk %}" class="action-icon action-icon-edit" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            {% if request.user.groups.exists %}
+                                {% for group in request.user.groups.all %}
+                                    {% if group.name == 'Administrador' %}
+                                        <button type="button" class="action-icon action-icon-delete" data-bs-toggle="modal" data-bs-target="#deleteMascotaModal{{ mascota.pk }}" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% empty %}
-                <div class="col-12">
+                    
+                    <!-- Modal de confirmación de eliminación -->
+                    {% if request.user.groups.exists %}
+                        {% for group in request.user.groups.all %}
+                            {% if group.name == 'Administrador' %}
+                                <div class="modal fade" id="deleteMascotaModal{{ mascota.pk }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirmar Eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Está seguro que desea eliminar a <strong>{{ mascota.nombre }}</strong>?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <form method="post" action="{% url 'mascotas:eliminar' mascota.pk %}" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% empty %}
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle me-2"></i>
                         {% if query %}
@@ -170,8 +243,8 @@
                             No hay mascotas registradas. ¡Registra la primera!
                         {% endif %}
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 </div>

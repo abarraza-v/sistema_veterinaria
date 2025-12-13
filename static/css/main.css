@@ -62,14 +62,15 @@ body {
 
 /* Cards */
 .card {
-    border: 1px solid #E5E7EB;
+    border: 1px solid #e5e7ea;
     border-radius: 0.75rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
 }
 
 .card:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 .card-header {
@@ -253,13 +254,13 @@ body {
 /* Cards de mascotas tipo fila */
 .mascota-card-row {
     background-color: white;
+    border: 1px solid #e5e7ea;
     border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    display: grid;
-    grid-template-columns: 4rem 1fr auto;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
     gap: 1.5rem;
-    align-items: start;
     transition: all 0.2s;
 }
 
@@ -281,24 +282,35 @@ body {
     flex-shrink: 0;
 }
 
-.mascota-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+.mascota-name {
+    font-weight: 700;
+    color: #1F2937;
+    font-size: 1.125rem;
+    margin-bottom: 0;
+    min-width: 120px;
+}
+
+.mascota-info-row {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex: 1;
+    flex-wrap: wrap;
 }
 
 .mascota-field {
     display: flex;
     flex-direction: column;
+    gap: 0.125rem;
+    min-width: 120px;
 }
 
 .mascota-field-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: #6B7280;
+    color: #9CA3AF;
     letter-spacing: 0.05em;
-    margin-bottom: 0.25rem;
 }
 
 .mascota-field-value {
@@ -307,18 +319,11 @@ body {
     font-weight: 500;
 }
 
-.mascota-name {
-    font-weight: 700;
-    color: #1F2937;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-}
-
 .mascota-actions {
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
-    align-self: center;
+    margin-left: auto;
 }
 
 /* Iconos de acción mejorados */
