@@ -1,0 +1,178 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}Clientes y Mascotas - Veterinaria Patitas Felices{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">Clientes y Mascotas</h2>
+            <p class="text-muted">Gestione la información de clientes y sus mascotas</p>
+        </div>
+    </div>
+
+    <!-- Switch de pestañas -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="tab-switch">
+                <button class="{% if tab == 'clientes' %}active{% endif %}" onclick="window.location.href='{% url 'clientes:listar' %}?tab=clientes{% if query %}&q={{ query }}{% endif %}'">
+                    <i class="bi bi-people me-2"></i>
+                    Clientes
+                </button>
+                <button class="{% if tab == 'mascotas' %}active{% endif %}" onclick="window.location.href='{% url 'clientes:listar' %}?tab=mascotas{% if query %}&q={{ query }}{% endif %}'">
+                    <i class="bi bi-heart me-2"></i>
+                    Mascotas
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            {% if tab == 'clientes' %}
+                <a href="{% url 'clientes:crear' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Registrar Cliente
+                </a>
+            {% else %}
+                <a href="{% url 'mascotas:crear' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Registrar Mascota
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="get" class="search-box">
+                <input type="hidden" name="tab" value="{{ tab }}">
+                <i class="bi bi-search"></i>
+                <input type="text" name="q" class="form-control" 
+                       placeholder="{% if tab == 'clientes' %}Buscar por nombre, RUT o teléfono...{% else %}Buscar por nombre de mascota, ID o dueño...{% endif %}" 
+                       value="{{ query }}">
+            </form>
+        </div>
+    </div>
+
+    {% if tab == 'clientes' %}
+        <!-- Vista de Clientes -->
+        <div class="row">
+            {% for cliente in clientes %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">{{ cliente.nombre }}</h5>
+                                    <p class="text-muted mb-0"><small>RUT: {{ cliente.rut }}</small></p>
+                                </div>
+                                <a href="{% url 'clientes:editar' cliente.pk %}" class="action-icon action-icon-edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-1">
+                                    <i class="bi bi-telephone me-2 text-primary"></i>
+                                    {{ cliente.telefono }}
+                                </p>
+                                {% if cliente.email %}
+                                    <p class="mb-0">
+                                        <i class="bi bi-envelope me-2 text-primary"></i>
+                                        {{ cliente.email }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="border-top pt-3">
+                                <p class="text-muted mb-2"><strong>Mascotas asociadas: {{ cliente.num_mascotas }}</strong></p>
+                                {% if cliente.mascotas.all %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for mascota in cliente.mascotas.all %}
+                                            {% if not mascota.is_deleted %}
+                                                <li class="mb-1">
+                                                    <i class="bi bi-circle-fill me-2" style="font-size: 0.5rem; color: #2563EB;"></i>
+                                                    <strong>{{ mascota.nombre }}</strong>
+                                                    <span class="text-muted">{{ mascota.especie }} • {{ mascota.raza }}</span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted mb-0"><em>Sin mascotas registradas</em></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        {% if query %}
+                            No se encontraron clientes que coincidan con "{{ query }}".
+                        {% else %}
+                            No hay clientes registrados. ¡Crea el primero!
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Vista de Mascotas -->
+        <div class="row">
+            {% for mascota in mascotas %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">{{ mascota.nombre }}</h5>
+                                    <p class="text-muted mb-0"><small>ID: #{{ mascota.pk }}</small></p>
+                                </div>
+                                <a href="{% url 'mascotas:editar' mascota.pk %}" class="action-icon action-icon-edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="mb-1">
+                                    <strong>Especie:</strong> {{ mascota.get_especie_display_custom }}
+                                </p>
+                                <p class="mb-1">
+                                    <strong>Raza:</strong> {{ mascota.raza }}
+                                </p>
+                                <p class="mb-0">
+                                    <strong>Sexo:</strong> {{ mascota.get_sexo_display }}
+                                </p>
+                            </div>
+
+                            <div class="border-top pt-3">
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-person me-2 text-primary"></i>
+                                    <strong>Dueño:</strong> {{ mascota.dueno.nombre }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        {% if query %}
+                            No se encontraron mascotas que coincidan con "{{ query }}".
+                        {% else %}
+                            No hay mascotas registradas. ¡Registra la primera!
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

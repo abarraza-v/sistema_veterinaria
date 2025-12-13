@@ -1,0 +1,55 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}Eliminar Cliente - Veterinaria Patitas Felices{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">¿Eliminar Cliente?</h3>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">
+                            <strong>Estás a punto de eliminar al cliente:</strong><br>
+                            <span class="fs-5">{{ cliente.nombre }}</span><br>
+                            RUT: {{ cliente.rut }}
+                        </p>
+                    </div>
+
+                    {% if num_mascotas > 0 %}
+                        <div class="alert alert-danger">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Este cliente tiene <strong>{{ num_mascotas }} mascota{{ num_mascotas|pluralize }}</strong> asociada{{ num_mascotas|pluralize }}.
+                            Al eliminar el cliente, sus mascotas también quedarán inaccesibles.
+                        </div>
+                    {% endif %}
+
+                    <p class="text-muted text-center mb-4">
+                        Esta acción no se puede deshacer. ¿Deseas continuar?
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-3 justify-content-center">
+                            <a href="{% url 'clientes:listar' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>
+                                Sí, Eliminar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

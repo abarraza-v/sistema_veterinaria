@@ -1,0 +1,48 @@
+{% extends 'base_with_sidebar.html' %}
+{% load static %}
+
+{% block title %}Eliminar Mascota - Veterinaria Patitas Felices{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">¿Eliminar Mascota?</h3>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <p class="mb-0">
+                            <strong>Estás a punto de eliminar la mascota:</strong><br>
+                            <span class="fs-5">{{ mascota.nombre }}</span><br>
+                            {{ mascota.get_especie_display_custom }} - {{ mascota.raza }}<br>
+                            <small class="text-muted">Dueño: {{ mascota.dueno.nombre }}</small>
+                        </p>
+                    </div>
+
+                    <p class="text-muted text-center mb-4">
+                        Esta acción no se puede deshacer. ¿Deseas continuar?
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-3 justify-content-center">
+                            <a href="{% url 'clientes:listar' %}?tab=mascotas" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-2"></i>
+                                Sí, Eliminar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
