@@ -8,7 +8,7 @@
         <div class="sidebar-header">
             <h4 class="mb-0">Veterinaria "Patitas Felices"</h4>
             <p class="text-muted mb-0 sidebar-time" id="current-time">10:15 a. m.</p>
-            <p class="text-muted mb-0" style="font-size: 0.9rem;">5 de diciembre de 2025</p>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;" id="current-date">5 de diciembre de 2025</p>
         </div>
 
         <div class="sidebar-user">
@@ -29,11 +29,11 @@
 
         <nav class="sidebar-nav">
             <a href="#" class="sidebar-link">
-                <i class="bi bi-speedometer2"></i>
+                <i class="bi bi-grid-fill"></i>
                 <span>Dashboard</span>
             </a>
             <a href="#" class="sidebar-link">
-                <i class="bi bi-calendar3"></i>
+                <i class="bi bi-calendar"></i>
                 <span>Agenda</span>
             </a>
             <a href="{% url 'clientes:listar' %}" class="sidebar-link {% if request.resolver_match.app_name == 'clientes' or request.resolver_match.app_name == 'mascotas' %}active{% endif %}">
@@ -94,7 +94,20 @@
         document.getElementById('current-time').textContent = `${displayHours}:${displayMinutes} ${ampm}`;
     }
     
+    // Actualizar la fecha
+    function updateDate() {
+        const now = new Date();
+        const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                       'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const day = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        
+        document.getElementById('current-date').textContent = `${day} de ${month} de ${year}`;
+    }
+    
     updateTime();
+    updateDate();
     setInterval(updateTime, 60000); // Actualizar cada minuto
 </script>
 {% endblock %}
