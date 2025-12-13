@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .forms import LoginForm
-from .models import LoginAttempt
+from .models import LoginAttempt, UserProfile
 
 
 @require_http_methods(["GET", "POST"])
@@ -33,6 +33,12 @@ def login_view(request):
             # Manejar "recordar sesión"
             if not form.cleaned_data.get('remember_me'):
                 request.session.set_expiry(0)  # Sesión expira al cerrar el navegador
+            
+            # Verificar si debe cambiar contraseña
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            if profile.debe_cambiar_password:
+                messages.warning(request, 'Debe cambiar su contraseña antes de continuar.')
+                return redirect('usuarios:cambiar_password', pk=user.pk)
             
             messages.success(request, f'Bienvenido, {user.first_name}!')
             return redirect('clientes:listar')
