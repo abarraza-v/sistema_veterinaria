@@ -73,3 +73,19 @@ class LoginAttempt(models.Model):
         
         return max(0, int(remaining))
 
+
+class UserProfile(models.Model):
+    """
+    Perfil extendido para usuarios con información adicional
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    debe_cambiar_password = models.BooleanField(default=False)
+    password_reset_date = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
+    
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
+

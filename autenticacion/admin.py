@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import LoginAttempt
+from .models import LoginAttempt, UserProfile
 
 
 @admin.register(LoginAttempt)
@@ -15,3 +15,10 @@ class LoginAttemptAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         return False
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'debe_cambiar_password', 'password_reset_date')
+    list_filter = ('debe_cambiar_password',)
+    search_fields = ('user__username', 'user__email')
