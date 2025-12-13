@@ -70,7 +70,6 @@ body {
 
 .card:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
 }
 
 .card-header {
@@ -123,17 +122,11 @@ body {
 
 .action-icon-danger {
     color: var(--color-danger);
-}
-
-.action-icon-danger:hover {
     background-color: #FEE2E2;
 }
 
 .action-icon-success {
     color: var(--color-success);
-}
-
-.action-icon-success:hover {
     background-color: var(--color-success-light);
 }
 
@@ -266,7 +259,6 @@ body {
 
 .mascota-card-row:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
 }
 
 .mascota-icon {
