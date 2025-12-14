@@ -181,25 +181,25 @@ class Command(BaseCommand):
         clientes_data = [
             {
                 'nombre': 'Juan Pérez',
-                'rut': '12345678-9',
+                'rut': '21.270.857-7',
                 'telefono': '+56 9 8765 4321',
                 'email': 'juan@email.cl'
             },
             {
                 'nombre': 'María González',
-                'rut': '98765432-1',
+                'rut': '8.808.668-6',
                 'telefono': '+56 9 1234 5678',
                 'email': 'maria@email.cl'
             },
             {
                 'nombre': 'Carlos Rodríguez',
-                'rut': '11222333-4',
+                'rut': '17.534.145-5',
                 'telefono': '+56 9 5555 6666',
                 'email': 'carlos@email.cl'
             },
             {
                 'nombre': 'Sofía Martínez',
-                'rut': '22333444-5',
+                'rut': '12.333.673-9',
                 'telefono': '+56 9 7777 8888',
                 'email': 'sofia@email.cl'
             },
@@ -225,9 +225,9 @@ class Command(BaseCommand):
                 'especie': 'Perro',
                 'raza': 'Labrador',
                 'sexo': 'Macho',
-                'edad': 3,
-                'fecha_nacimiento': date(2021, 3, 15),
-                'alergias': 'Ninguna conocida'
+                'edad': 4,
+                'fecha_nacimiento': date(2021, 12, 13),
+                'alergias': None
             },
             {
                 'dueno': clientes_creados['María González'],
@@ -235,8 +235,8 @@ class Command(BaseCommand):
                 'especie': 'Gato',
                 'raza': 'Siamés',
                 'sexo': 'Hembra',
-                'edad': 2,
-                'fecha_nacimiento': date(2022, 6, 20),
+                'edad': 3,
+                'fecha_nacimiento': date(2022, 12, 13),
                 'alergias': None
             },
             {
@@ -245,8 +245,8 @@ class Command(BaseCommand):
                 'especie': 'Perro',
                 'raza': 'Pastor Alemán',
                 'sexo': 'Macho',
-                'edad': 5,
-                'fecha_nacimiento': date(2019, 1, 10),
+                'edad': 6,
+                'fecha_nacimiento': date(2019, 12, 13),
                 'alergias': 'Alergia a algunos tipos de pasto'
             },
             {
@@ -256,7 +256,7 @@ class Command(BaseCommand):
                 'raza': 'Persa',
                 'sexo': 'Hembra',
                 'edad': 4,
-                'fecha_nacimiento': date(2020, 8, 5),
+                'fecha_nacimiento': date(2020, 12, 13),
                 'alergias': None
             },
             {
@@ -265,8 +265,8 @@ class Command(BaseCommand):
                 'especie': 'Ave',
                 'raza': 'Loro',
                 'sexo': 'Macho',
-                'edad': 7,
-                'fecha_nacimiento': date(2017, 4, 12),
+                'edad': 8,
+                'fecha_nacimiento': date(2017, 12, 13),
                 'alergias': None
             },
             {
@@ -275,8 +275,8 @@ class Command(BaseCommand):
                 'especie': 'Roedor',
                 'raza': 'Hámster Sirio',
                 'sexo': 'Macho',
-                'edad': 1,
-                'fecha_nacimiento': date(2023, 11, 1),
+                'edad': 2,
+                'fecha_nacimiento': date(2023, 12, 13),
                 'alergias': None
             },
         ]
