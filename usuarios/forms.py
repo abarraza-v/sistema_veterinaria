@@ -51,8 +51,35 @@ class UsuarioForm(forms.ModelForm):
         email = self.cleaned_data.get('email')
         # Verificar que el email sea único
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('Este correo electrónico ya está registrado.')
+            raise forms.ValidationError('Ya existe un usuario con este correo electrónico.')
+        
+        # Validar formato de email
+        if email and '@' not in email:
+            raise forms.ValidationError('Ingrese un correo electrónico válido.')
+        
         return email
+    
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            # Validar que el nombre tenga al menos 2 caracteres
+            if len(first_name.strip()) < 2:
+                raise forms.ValidationError('El nombre debe tener al menos 2 caracteres.')
+            # Validar que no sea solo números
+            if first_name.strip().isdigit():
+                raise forms.ValidationError('El nombre no puede contener solo números.')
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            # Validar que el apellido tenga al menos 2 caracteres
+            if len(last_name.strip()) < 2:
+                raise forms.ValidationError('El apellido debe tener al menos 2 caracteres.')
+            # Validar que no sea solo números
+            if last_name.strip().isdigit():
+                raise forms.ValidationError('El apellido no puede contener solo números.')
+        return last_name
     
     def save(self, commit=True):
         user = super().save(commit=False)

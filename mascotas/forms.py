@@ -90,7 +90,38 @@ class MascotaForm(forms.ModelForm):
             # No permitir fechas futuras
             if fecha_nacimiento > date.today():
                 raise forms.ValidationError('La fecha de nacimiento no puede ser posterior a hoy.')
+            
+            # Validar que la mascota no sea demasiado vieja (más de 30 años)
+            edad_maxima = date.today().year - fecha_nacimiento.year
+            if edad_maxima > 30:
+                raise forms.ValidationError('La fecha de nacimiento parece incorrecta. Por favor, verifíquela.')
         return fecha_nacimiento
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if nombre:
+            # Validar que el nombre tenga al menos 2 caracteres
+            if len(nombre.strip()) < 2:
+                raise forms.ValidationError('El nombre debe tener al menos 2 caracteres.')
+        return nombre
+    
+    def clean_raza(self):
+        raza = self.cleaned_data.get('raza')
+        if raza:
+            # Validar que la raza tenga al menos 2 caracteres
+            if len(raza.strip()) < 2:
+                raise forms.ValidationError('La raza debe tener al menos 2 caracteres.')
+        return raza
+    
+    def clean_edad(self):
+        edad = self.cleaned_data.get('edad')
+        if edad is not None:
+            # Validar que la edad sea razonable
+            if edad < 0:
+                raise forms.ValidationError('La edad no puede ser negativa.')
+            if edad > 30:
+                raise forms.ValidationError('La edad parece demasiado alta. Por favor, verifíquela.')
+        return edad
     
     def clean(self):
         cleaned_data = super().clean()

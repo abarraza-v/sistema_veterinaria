@@ -44,6 +44,16 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError('El RUT ingresado no es válido.')
             # Formatear el RUT antes de guardarlo
             rut = formatear_rut(rut)
+            
+            # Verificar que el RUT sea único (excepto para la instancia actual)
+            if self.instance.pk:
+                # Editando un cliente existente
+                if Cliente.objects.filter(rut=rut).exclude(pk=self.instance.pk).exists():
+                    raise forms.ValidationError('Ya existe un cliente con este RUT.')
+            else:
+                # Creando un nuevo cliente
+                if Cliente.objects.filter(rut=rut).exists():
+                    raise forms.ValidationError('Ya existe un cliente con este RUT.')
         return rut
     
     def clean_telefono(self):
@@ -51,4 +61,35 @@ class ClienteForm(forms.ModelForm):
         if telefono:
             # Formatear el teléfono antes de guardarlo
             telefono = formatear_telefono_chileno(telefono)
+            
+            # Validar formato básico (debe tener al menos 8 dígitos)
+            import re
+            digitos = re.sub(r'\D', '', telefono)
+            if len(digitos) < 8:
+                raise forms.ValidationError('El teléfono debe tener al menos 8 dígitos.')
         return telefono
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            # Verificar que el email sea único (excepto para la instancia actual)
+            if self.instance.pk:
+                # Editando un cliente existente
+                if Cliente.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+                    raise forms.ValidationError('Ya existe un cliente con este correo electrónico.')
+            else:
+                # Creando un nuevo cliente
+                if Cliente.objects.filter(email__iexact=email).exists():
+                    raise forms.ValidationError('Ya existe un cliente con este correo electrónico.')
+        return email
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if nombre:
+            # Validar que el nombre tenga al menos 3 caracteres
+            if len(nombre.strip()) < 3:
+                raise forms.ValidationError('El nombre debe tener al menos 3 caracteres.')
+            # Validar que no sea solo números
+            if nombre.strip().isdigit():
+                raise forms.ValidationError('El nombre no puede contener solo números.')
+        return nombre
