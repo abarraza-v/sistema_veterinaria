@@ -290,3 +290,18 @@ def cambiar_password(request, pk):
         'debe_cambiar': profile.debe_cambiar_password
     })
 
+
+@login_required
+@user_passes_test(is_admin, login_url='clientes:listar')
+def detalle(request, pk):
+    """Ver detalles de un usuario"""
+    usuario = get_object_or_404(User, pk=pk)
+    
+    context = {
+        'usuario': usuario
+    }
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'usuarios/usuario_detalle_modal.html', context)
+    
+    return render(request, 'usuarios/usuario_detalle.html', context)

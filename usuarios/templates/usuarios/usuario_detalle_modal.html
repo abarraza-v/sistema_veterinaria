@@ -1,0 +1,96 @@
+<div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-person-badge me-2"></i>Detalle del Usuario</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Nombre Completo</h6>
+                <p class="detail-value">{{ usuario.get_full_name }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Nombre de Usuario</h6>
+                <p class="detail-value">{{ usuario.username }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Correo Electrónico</h6>
+                <p class="detail-value">{{ usuario.email }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Rol</h6>
+                <p class="detail-value">
+                    {% if usuario.groups.all %}
+                        {% with grupo=usuario.groups.first.name %}
+                            {% if grupo == 'Recepcionista' %}
+                                <span class="badge badge-recepcionista">Recepcionista</span>
+                            {% elif grupo == 'Veterinario' %}
+                                <span class="badge badge-veterinario">Veterinario</span>
+                            {% elif grupo == 'Administrador' %}
+                                <span class="badge badge-administrador">Administrador</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ grupo }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <span class="badge bg-secondary">Sin rol</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Estado</h6>
+                <p class="detail-value">
+                    {% if usuario.is_active %}
+                        <span class="badge badge-activo">Activo</span>
+                    {% else %}
+                        <span class="badge badge-inactivo">Inactivo</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Fecha de Registro</h6>
+                <p class="detail-value">{{ usuario.date_joined|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Último Inicio de Sesión</h6>
+                <p class="detail-value">
+                    {% if usuario.last_login %}
+                        {{ usuario.last_login|date:"d/m/Y H:i" }}
+                    {% else %}
+                        Nunca
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Permisos de Staff</h6>
+                <p class="detail-value">
+                    {% if usuario.is_staff %}
+                        <i class="bi bi-check-circle-fill text-success me-1"></i>Sí
+                    {% else %}
+                        <i class="bi bi-x-circle-fill text-danger me-1"></i>No
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <a href="{% url 'usuarios:editar' usuario.pk %}" class="btn btn-primary">
+        <i class="bi bi-pencil-square me-2"></i>Editar
+    </a>
+</div>

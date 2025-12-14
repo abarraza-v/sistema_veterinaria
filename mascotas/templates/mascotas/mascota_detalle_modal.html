@@ -1,0 +1,98 @@
+<div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-heart-fill me-2"></i>Detalle de la Mascota</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Nombre</h6>
+                <p class="detail-value">{{ mascota.nombre }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Especie</h6>
+                <p class="detail-value">
+                    {% if mascota.especie == 'Otro' and mascota.especie_otro %}
+                        {{ mascota.especie_otro }}
+                    {% else %}
+                        {{ mascota.especie }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Raza</h6>
+                <p class="detail-value">{{ mascota.raza }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Sexo</h6>
+                <p class="detail-value">{{ mascota.sexo }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Edad</h6>
+                <p class="detail-value">
+                    {% if mascota.edad %}
+                        {{ mascota.edad }} año{% if mascota.edad != 1 %}s{% endif %}
+                    {% else %}
+                        No especificada
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Fecha de Nacimiento</h6>
+                <p class="detail-value">
+                    {% if mascota.fecha_nacimiento %}
+                        {{ mascota.fecha_nacimiento|date:"d/m/Y" }}
+                    {% else %}
+                        No especificada
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card bg-light">
+                <h6 class="detail-label">Dueño</h6>
+                <p class="detail-value mb-1"><strong>{{ mascota.dueno.nombre }}</strong></p>
+                <p class="detail-value small mb-0">
+                    <i class="bi bi-telephone me-1"></i>{{ mascota.dueno.telefono }}
+                    {% if mascota.dueno.email %}
+                        <br><i class="bi bi-envelope me-1"></i>{{ mascota.dueno.email }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Alergias</h6>
+                <p class="detail-value">{{ mascota.alergias|default:"Ninguna registrada" }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Fecha de Registro</h6>
+                <p class="detail-value">{{ mascota.created_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Última Actualización</h6>
+                <p class="detail-value">{{ mascota.updated_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <a href="{% url 'mascotas:editar' mascota.pk %}" class="btn btn-primary">
+        <i class="bi bi-pencil-square me-2"></i>Editar
+    </a>
+</div>

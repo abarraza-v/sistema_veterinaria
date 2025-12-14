@@ -1,0 +1,68 @@
+<div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-person-circle me-2"></i>Detalle del Cliente</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Nombre Completo</h6>
+                <p class="detail-value">{{ cliente.nombre }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">RUT</h6>
+                <p class="detail-value">{{ cliente.rut }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Teléfono</h6>
+                <p class="detail-value">{{ cliente.telefono }}</p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card">
+                <h6 class="detail-label">Correo Electrónico</h6>
+                <p class="detail-value">{{ cliente.email|default:"No especificado" }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Fecha de Registro</h6>
+                <p class="detail-value">{{ cliente.created_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card">
+                <h6 class="detail-label">Última Actualización</h6>
+                <p class="detail-value">{{ cliente.updated_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="detail-card bg-light">
+                <h6 class="detail-label">Mascotas Asociadas ({{ num_mascotas }})</h6>
+                {% if mascotas %}
+                    <ul class="list-unstyled mb-0 mt-2">
+                        {% for mascota in mascotas %}
+                            <li class="mb-2">
+                                <i class="bi bi-heart-fill me-2 text-primary"></i>
+                                <strong>{{ mascota.nombre }}</strong>
+                                <span class="text-muted">- {{ mascota.especie }} • {{ mascota.raza }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted mb-0 mt-2">Sin mascotas registradas</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <a href="{% url 'clientes:editar' cliente.pk %}" class="btn btn-primary">
+        <i class="bi bi-pencil-square me-2"></i>Editar
+    </a>
+</div>

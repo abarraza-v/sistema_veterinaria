@@ -64,6 +64,13 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
+                                        <button type="button" 
+                                           class="action-icon action-icon-view" 
+                                           onclick="verDetalleUsuario({{ usuario.pk }})"
+                                           title="Ver detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        
                                         <a href="{% url 'usuarios:editar' usuario.pk %}" 
                                            class="action-icon action-icon-edit" 
                                            title="Editar">
@@ -100,4 +107,30 @@
         </div>
     </div>
 </div>
+
+<!-- Modal genérico para detalles de usuario -->
+<div class="modal fade" id="detalleUsuarioModal" tabindex="-1" aria-labelledby="detalleUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="detalleUsuarioContent">
+            <!-- Contenido cargado dinámicamente -->
+        </div>
+    </div>
+</div>
+
+<script>
+function verDetalleUsuario(usuarioId) {
+    fetch(`/usuarios/detalle/${usuarioId}/`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById('detalleUsuarioContent').innerHTML = html;
+        var modal = new bootstrap.Modal(document.getElementById('detalleUsuarioModal'));
+        modal.show();
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
 {% endblock %}

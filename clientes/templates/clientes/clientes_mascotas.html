@@ -87,6 +87,9 @@
                     </p>
                   </div>
                   <div class="d-flex gap-2">
+                    <button type="button" class="action-icon action-icon-view" onclick="verDetalleCliente({{ cliente.pk }})" title="Ver detalle">
+                      <i class="bi bi-eye"></i>
+                    </button>
                     <a href="{% url 'clientes:editar' cliente.pk %}" class="action-icon action-icon-edit"><i class="bi bi-pencil-square"></i></a>
                     {% if request.user.groups.exists %}
                       {% for group in request.user.groups.all %}
@@ -221,6 +224,9 @@
                 </div>
               </div>
               <div class="mascota-actions">
+                <button type="button" class="action-icon action-icon-view" onclick="verDetalleMascota({{ mascota.pk }})" title="Ver detalle">
+                  <i class="bi bi-eye"></i>
+                </button>
                 <a href="{% url 'mascotas:editar' mascota.pk %}" class="action-icon action-icon-edit" title="Editar"><i class="bi bi-pencil-square"></i></a>
                 {% if request.user.groups.exists %}
                   {% for group in request.user.groups.all %}
@@ -273,4 +279,56 @@
       </div>
     {% endif %}
   </div>
+
+  <!-- Modal genérico para detalles de cliente -->
+  <div class="modal fade" id="detalleClienteModal" tabindex="-1" aria-labelledby="detalleClienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" id="detalleClienteContent">
+        <!-- Contenido cargado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal genérico para detalles de mascota -->
+  <div class="modal fade" id="detalleMascotaModal" tabindex="-1" aria-labelledby="detalleMascotaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" id="detalleMascotaContent">
+        <!-- Contenido cargado dinámicamente -->
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function verDetalleCliente(clienteId) {
+    fetch(`/clientes/detalle/${clienteId}/`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById('detalleClienteContent').innerHTML = html;
+        var modal = new bootstrap.Modal(document.getElementById('detalleClienteModal'));
+        modal.show();
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function verDetalleMascota(mascotaId) {
+    fetch(`/mascotas/detalle/${mascotaId}/`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById('detalleMascotaContent').innerHTML = html;
+        var modal = new bootstrap.Modal(document.getElementById('detalleMascotaModal'));
+        modal.show();
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
 {% endblock %}

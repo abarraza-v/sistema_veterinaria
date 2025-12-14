@@ -73,3 +73,16 @@ def eliminar(request, pk):
     })
 
 
+@login_required
+def detalle(request, pk):
+    """Ver detalles de una mascota"""
+    mascota = get_object_or_404(Mascota, pk=pk, is_deleted=False)
+    
+    context = {
+        'mascota': mascota
+    }
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'mascotas/mascota_detalle_modal.html', context)
+    
+    return render(request, 'mascotas/mascota_detalle.html', context)

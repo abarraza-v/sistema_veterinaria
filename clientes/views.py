@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count
+from django.http import JsonResponse
 from .models import Cliente
 from .forms import ClienteForm
 
@@ -116,5 +117,23 @@ def eliminar(request, pk):
         'cliente': cliente,
         'num_mascotas': num_mascotas
     })
+
+
+@login_required
+def detalle(request, pk):
+    """Ver detalles de un cliente"""
+    cliente = get_object_or_404(Cliente, pk=pk, is_deleted=False)
+    mascotas = cliente.mascotas.filter(is_deleted=False)
+    
+    context = {
+        'cliente': cliente,
+        'mascotas': mascotas,
+        'num_mascotas': mascotas.count()
+    }
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'clientes/cliente_detalle_modal.html', context)
+    
+    return render(request, 'clientes/cliente_detalle.html', context)
 
 
