@@ -9,49 +9,51 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 1rem;
     }
     
     .login-container {
-        max-width: 480px;
+        max-width: 420px;
         width: 100%;
-        padding: 1rem;
     }
     
     .login-card {
         background: white;
         border-radius: 1rem;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        padding: 3rem 2.5rem;
+        padding: 2rem 1.75rem;
     }
     
     .login-header {
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
     
     .login-header h2 {
         color: #2563EB;
         font-weight: 700;
-        font-size: 1.75rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+        margin-bottom: 0.35rem;
     }
     
     .login-header p {
         color: #6B7280;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
     
     .form-label {
         font-weight: 500;
         color: #374151;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
     }
     
     .form-control {
         border-radius: 0.5rem;
         border: 1px solid #D1D5DB;
-        padding: 0.75rem 1rem;
-        padding-right: 3rem;
+        padding: 0.65rem 0.9rem;
+        padding-right: 2.75rem;
+        font-size: 0.95rem;
     }
     
     .form-control:focus {
@@ -65,7 +67,7 @@
     
     .input-icon {
         position: absolute;
-        right: 1rem;
+        right: 0.9rem;
         top: 50%;
         transform: translateY(-50%);
         color: #9CA3AF;
@@ -75,13 +77,14 @@
     
     .btn-login {
         width: 100%;
-        padding: 0.875rem;
+        padding: 0.75rem;
         background-color: #2563EB;
         border: none;
         border-radius: 0.5rem;
         color: white;
         font-weight: 600;
         transition: all 0.2s;
+        font-size: 0.95rem;
     }
     
     .btn-login:hover {
@@ -92,7 +95,7 @@
     
     .forgot-password {
         text-align: center;
-        margin-top: 1rem;
+        margin-top: 0.85rem;
     }
     
     .forgot-password a {
@@ -106,22 +109,22 @@
     }
     
     .autocomplete-section {
-        margin-top: 2rem;
-        padding-top: 2rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
         border-top: 1px solid #E5E7EB;
     }
     
     .autocomplete-section p {
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         color: #6B7280;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
     .user-quick-login {
         background: #F9FAFB;
         border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.75rem;
+        padding: 0.6rem 0.85rem;
+        margin-bottom: 0.6rem;
         cursor: pointer;
         transition: all 0.2s;
         border: 1px solid #E5E7EB;
@@ -135,17 +138,44 @@
     .user-quick-login strong {
         display: block;
         color: #1F2937;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
+        font-size: 0.9rem;
     }
     
     .user-quick-login span {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: #6B7280;
     }
     
     .alert {
         border-radius: 0.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
+        padding: 0.85rem;
+        font-size: 0.9rem;
+    }
+    
+    .form-check {
+        margin-bottom: 0.75rem;
+    }
+    
+    .form-check-label {
+        font-size: 0.9rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-height: 800px) {
+        .login-card {
+            padding: 1.5rem 1.5rem;
+        }
+        
+        .login-header {
+            margin-bottom: 1.25rem;
+        }
+        
+        .autocomplete-section {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+        }
     }
 </style>
 {% endblock %}
