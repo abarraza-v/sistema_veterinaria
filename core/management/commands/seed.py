@@ -3,10 +3,8 @@ Comando para poblar la base de datos con datos de prueba
 """
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User, Group
-from django.db import connection
 from clientes.models import Cliente
 from mascotas.models import Mascota
-from autenticacion.models import LoginAttempt, UserProfile
 from datetime import date
 import os
 
