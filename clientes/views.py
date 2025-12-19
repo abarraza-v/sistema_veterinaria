@@ -23,8 +23,9 @@ def listar(request):
             Q(nombre__icontains=query) |
             Q(rut__icontains=query) |
             Q(telefono__icontains=query) |
-            Q(email__icontains=query)
-        )
+            Q(email__icontains=query) |
+            Q(mascotas__nombre__icontains=query)
+        ).distinct()
     
     # Obtener mascotas
     from mascotas.models import Mascota
