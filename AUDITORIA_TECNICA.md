@@ -80,7 +80,7 @@ python manage.py seed --reset
 **Comando `seed`:**
 
 - Crea 3 grupos de usuarios: Administrador, Recepcionista, Veterinario
-- Genera 5 usuarios de prueba (1 admin, 1 recepcionista, 3 veterinarios)
+- Genera 6 usuarios de prueba (1 admin, 2 recepcionistas [1 activo, 1 inactivo], 3 veterinarios)
 - Crea 4 clientes de prueba
 - Registra 6 mascotas de prueba
 - Con `--reset`: elimina BD, migraciones, y recrea todo desde cero
